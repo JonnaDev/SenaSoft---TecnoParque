@@ -200,7 +200,7 @@
                                                     size="sm" 
                                                     variant="ghost" 
                                                     icon="trash"
-                                                    onclick="deleteProyecto({{ $proyecto->id }})"
+                                                    href="{{ route('proyectos.destroy', $proyecto->id) }}"
                                                     class="text-slate-600 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400">
                                                 </flux:button>
                                             </div>

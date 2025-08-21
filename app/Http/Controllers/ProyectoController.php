@@ -120,13 +120,6 @@ class ProyectoController extends Controller
     {
         $proyecto->delete();
 
-        if (request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Proyecto eliminado exitosamente'
-            ]);
-        }
-
         return redirect()->route('proyectos.index')
             ->with('success', 'Proyecto eliminado exitosamente');
     }
