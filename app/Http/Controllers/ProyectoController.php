@@ -64,13 +64,6 @@ class ProyectoController extends Controller
     {
         $proyecto->load(['semillero', 'responsable']);
         
-        if (request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'proyecto' => $proyecto
-            ]);
-        }
-        
         return view('proyectos.show', compact('proyecto'));
     }
 
