@@ -1,9 +1,10 @@
+<!-- resources/views/components/layouts/app/sidebar.blade.php (este es el sidebar del dashboard e incluso afecta la vista fuera del side con body) -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen dark:bg-zinc-900">
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -20,38 +21,56 @@
                         wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:navlist.item>
-            
-                    <flux:navlist.item 
-                        icon="users" 
-                        :href="route('semilleros.index')" 
-                        :current="request()->routeIs('semilleros.*')" 
-                        wire:navigate>
-                        {{ __('Semilleros') }}
-                    </flux:navlist.item>
-            
-                    <flux:navlist.item 
-                        icon="folder" 
-                        :href="route('proyectos.index')" 
-                        :current="request()->routeIs('proyectos.*')" 
-                        wire:navigate>
-                        {{ __('Proyectos') }}
-                    </flux:navlist.item>
 
+                        @if(auth()->user()->rol === 'Directora')
+                        <flux:navlist.item 
+                            icon="users" 
+                            :href="route('semilleros.index')" 
+                            :current="request()->routeIs('semilleros.*')" 
+                            wire:navigate>
+                            {{ __('Semilleros') }}
+                        </flux:navlist.item>
 
-                    
+                        <flux:navlist.item 
+                            icon="users" 
+                            :href="route('users.index')" 
+                            :current="request()->routeIs('users.*')" 
+                            wire:navigate>
+                            {{ __('Usuarios') }}
+                        </flux:navlist.item>
+                        @endif
+
+                        @if(auth()->user()->rol === 'DirectorGrupo')
+                        <flux:navlist.item 
+                            icon="folder" 
+                            :href="route('proyectos.index')" 
+                            :current="request()->routeIs('proyectos.*')" 
+                            wire:navigate>
+                            {{ __('Proyectos') }}
+                        </flux:navlist.item>
+                    @endif
+
+                    @if(auth()->user()->rol === 'Aprendiz')
+                        <flux:navlist.item 
+                            icon="user" 
+                            :href="route('aprendiz.index')" 
+                            :current="request()->routeIs('aprendiz.*')" 
+                            wire:navigate>
+                            {{ __('Aprendiz') }}
+                        </flux:navlist.item>
+                    @endif
                 </flux:navlist.group>
             </flux:navlist>
-
 
             <flux:spacer />
 
             <flux:navlist variant="outline">
                 <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
+                    {{ __('Repository') }}
                 </flux:navlist.item>
 
                 <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
+                    {{ __('Documentation') }}
                 </flux:navlist.item>
             </flux:navlist>
 
@@ -68,9 +87,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
+                                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
@@ -86,7 +103,7 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
@@ -118,9 +135,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
+                                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
@@ -136,7 +151,7 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />

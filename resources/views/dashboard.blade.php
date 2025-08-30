@@ -1,6 +1,6 @@
 <x-layouts.app :title="__('Dashboard')">
     <!-- Applied dark blue gradient background and modern dashboard cards -->
-    <div class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+    <div class="min-h-screen bg-gradient-to-br from-zinc-900 via-accent-foreground to-accent-500">
         <div class="flex h-full w-full flex-1 flex-col gap-6 p-6">
             <!-- Stats Cards -->
             <div class="grid auto-rows-min gap-6 md:grid-cols-3">

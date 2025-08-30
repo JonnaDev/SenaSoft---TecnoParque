@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -12,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::whereIn('rol', ['Directora', 'DirectorGrupo'])->get();
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -20,7 +24,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.create');
     }
 
     /**
@@ -28,15 +32,21 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', Password::defaults()],
+            'rol' => ['required', new Enum(\App\Enums\Rol::class)], // Usa Enum si tienes una clase Enum
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'rol' => $request->rol,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
     }
 
     /**
@@ -44,7 +54,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        if (!in_array($user->rol, ['Directora', 'DirectorGrupo'])) {
+            return redirect()->route('users.index')->with('error', 'No puedes editar usuarios con rol Aprendiz.');
+        }
+
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -52,7 +66,25 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        if (!in_array($user->rol, ['Directora', 'DirectorGrupo'])) {
+            return redirect()->route('users.index')->with('error', 'No puedes editar usuarios con rol Aprendiz.');
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'rol' => ['required', new Enum(\App\Enums\Rol::class)],
+            'password' => ['nullable', Password::defaults()],
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'rol' => $request->rol,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
     }
 
     /**
@@ -60,6 +92,11 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if (!in_array($user->rol, ['Directora', 'DirectorGrupo'])) {
+            return redirect()->route('users.index')->with('error', 'No puedes eliminar usuarios con rol Aprendiz.');
+        }
+
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
     }
 }

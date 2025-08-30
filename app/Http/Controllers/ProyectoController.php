@@ -25,7 +25,8 @@ class ProyectoController extends Controller
     {
         $semilleros = Semillero::all();
         $users = User::all();
-        return view('proyectos.create', compact('semilleros', 'users'));
+        $aprendices = User::where('rol', 'Aprendiz')->get();
+        return view('proyectos.create', compact('semilleros', 'users', 'aprendices'));
     }
 
     /**
@@ -41,9 +42,22 @@ class ProyectoController extends Controller
             'fase_actual' => 'required|in:propuesta,analisis,diseño,desarrollo,prueba,implantacion',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after:fecha_inicio',
+            'aprendices' => 'nullable|array',
+            'aprendices.*' => 'exists:users,id',
         ]);
 
         $proyecto = Proyecto::create($validated);
+
+        if ($request->has('aprendices')) {
+            $aprendicesData = [];
+            foreach ($request->aprendices as $aprendizId) {
+                $aprendicesData[$aprendizId] = [
+                    'estado' => 'activo',
+                    'fecha_asignacion' => now(),
+                ];
+            }
+            $proyecto->aprendices()->attach($aprendicesData);
+        }
 
         if ($request->ajax()) {
             return response()->json([
@@ -62,7 +76,7 @@ class ProyectoController extends Controller
      */
     public function show(Proyecto $proyecto)
     {
-        $proyecto->load(['semillero', 'responsable']);
+        $proyecto->load(['semillero', 'responsable', 'aprendices']);
         
         return view('proyectos.show', compact('proyecto'));
     }
@@ -74,7 +88,9 @@ class ProyectoController extends Controller
     {
         $semilleros = Semillero::all();
         $users = User::all();
-        return view('proyectos.edit', compact('proyecto', 'semilleros', 'users'));
+        $aprendices = User::where('rol', 'Aprendiz')->get();
+        $proyecto->load('aprendices');
+        return view('proyectos.edit', compact('proyecto', 'semilleros', 'users', 'aprendices'));
     }
 
     /**
@@ -90,9 +106,24 @@ class ProyectoController extends Controller
             'fase_actual' => 'required|in:propuesta,analisis,diseño,desarrollo,prueba,implantacion',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after:fecha_inicio',
+            'aprendices' => 'nullable|array',
+            'aprendices.*' => 'exists:users,id',
         ]);
 
         $proyecto->update($validated);
+
+        if ($request->has('aprendices')) {
+            $aprendicesData = [];
+            foreach ($request->aprendices as $aprendizId) {
+                $aprendicesData[$aprendizId] = [
+                    'estado' => 'activo',
+                    'fecha_asignacion' => now(),
+                ];
+            }
+            $proyecto->aprendices()->sync($aprendicesData);
+        } else {
+            $proyecto->aprendices()->detach();
+        }
 
         if ($request->ajax()) {
             return response()->json([

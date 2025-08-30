@@ -35,4 +35,11 @@ class Proyecto extends Model
     {
         return $this->belongsTo(User::class, 'responsable_id');
     }
+
+    public function aprendices()
+    {
+        return $this->belongsToMany(User::class, 'proyecto_aprendices')
+                    ->withPivot('estado', 'fecha_asignacion')
+                    ->withTimestamps();
+    }
 }

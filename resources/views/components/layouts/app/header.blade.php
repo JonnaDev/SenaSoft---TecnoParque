@@ -15,6 +15,27 @@
                 <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:navbar.item>
+
+                @if(auth()->user()->rol === 'Directora')
+                    <flux:navbar.item icon="users" :href="route('semilleros.index')" :current="request()->routeIs('semilleros.*')" wire:navigate>
+                        {{ __('Semilleros') }}
+                    </flux:navbar.item>
+                    <flux:navbar.item icon="user" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
+                        {{ __('Usuarios') }}
+                    </flux:navbar.item>
+                @endif
+
+                @if(auth()->user()->rol === 'DirectorGrupo')
+                    <flux:navbar.item icon="folder" :href="route('proyectos.index')" :current="request()->routeIs('proyectos.*')" wire:navigate>
+                        {{ __('Proyectos') }}
+                    </flux:navbar.item>
+                @endif
+
+                @if(auth()->user()->rol === 'Aprendiz')
+                    <flux:navbar.item icon="user" :href="route('aprendiz.index')" :current="request()->routeIs('aprendiz.*')" wire:navigate>
+                        {{ __('Aprendiz') }}
+                    </flux:navbar.item>
+                @endif
             </flux:navbar>
 
             <flux:spacer />
@@ -55,9 +76,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
+                                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                                         {{ auth()->user()->initials() }}
                                     </span>
                                 </span>
@@ -73,7 +92,7 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                            <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />
@@ -99,8 +118,29 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')">
                     <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                      {{ __('Dashboard') }}
+                        {{ __('Dashboard') }}
                     </flux:navlist.item>
+                    
+                    @if(auth()->user()->rol === 'Directora')
+                        <flux:navlist.item icon="users" :href="route('semilleros.index')" :current="request()->routeIs('semilleros.*')" wire:navigate>
+                            {{ __('Semilleros') }}
+                        </flux:navlist.item>
+                        <flux:navlist.item icon="user" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
+                            {{ __('Usuarios') }}
+                        </flux:navlist.item>
+                    @endif
+
+                    @if(auth()->user()->rol === 'DirectorGrupo')
+                        <flux:navlist.item icon="folder" :href="route('proyectos.index')" :current="request()->routeIs('proyectos.*')" wire:navigate>
+                            {{ __('Proyectos') }}
+                        </flux:navlist.item>
+                    @endif
+
+                    @if(auth()->user()->rol === 'Aprendiz')
+                        <flux:navlist.item icon="user" :href="route('aprendiz.index')" :current="request()->routeIs('aprendiz.*')" wire:navigate>
+                            {{ __('Aprendiz') }}
+                        </flux:navlist.item>
+                    @endif
                 </flux:navlist.group>
             </flux:navlist>
 

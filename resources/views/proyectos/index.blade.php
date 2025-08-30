@@ -134,7 +134,7 @@
                                                     {{ $proyecto->titulo }}
                                                 </div>
                                                 <div class="text-sm text-slate-500 dark:text-slate-400 truncate max-w-xs">
-                                                    {{ Str::limit($proyecto->descripcion, 50) }}
+                                                    {{ Str::limit($proyecto->descripcion, 255) }}
                                                 </div>
                                             </div>
                                         </div>
