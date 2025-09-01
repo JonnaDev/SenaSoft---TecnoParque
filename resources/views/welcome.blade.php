@@ -38,7 +38,7 @@
                                 Dashboard
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="px-4 py-2 border border-zinc-300 rounded-lg hover:bg-zinc-100 transition-all text-zinc-700">
+                            <a href="{{ route('login') }}" class="px-4 py-2 bg-gradient-to-r from-zinc-500 to-gray-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all transform hover:scale-105 ">
                                 Iniciar Sesión
                             </a>
                             @if (Route::has('register'))
